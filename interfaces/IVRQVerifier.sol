@@ -3,7 +3,7 @@
 // IVRQVerifier.sol — ZK-DID Compliance Verifier Interface
 // Ref: Whitepaper §11.11 · core/contracts/IKPXRouter.sol
 
-pragma solidity ^0.8.28;
+pragma solidity ^0.8.24;
 
 /// @title IVRQVerifier
 /// @notice Interface cho VERACIPHERS ZK-DID compliance verification

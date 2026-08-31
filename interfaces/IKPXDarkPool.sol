@@ -3,7 +3,7 @@
 // IKPXDarkPool.sol — Dark Pool Interface
 // Ref: Whitepaper §11.11 · IKPXRouter.sol Section 4
 
-pragma solidity ^0.8.28;
+pragma solidity ^0.8.24;
 
 /// @title IKPXDarkPool
 /// @notice Interface cho AXIO Dark Pool — block trades ẩn danh, không front-running

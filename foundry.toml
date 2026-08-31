@@ -1,5 +1,5 @@
 [profile.default]
-src          = "."
+src          = "src"
 test         = "test"
 out          = "out"
 libs         = ["lib"]
@@ -11,12 +11,6 @@ via_ir       = true
 remappings   = [
   "@openzeppelin/=lib/openzeppelin-contracts/",
   "forge-std/=lib/forge-std/src/"
-]
-exclude      = [
-  "lib/openzeppelin-contracts/certora/**",
-  "lib/openzeppelin-contracts/test/**",
-  "lib/openzeppelin-contracts/audits/**",
-  "lib/openzeppelin-contracts/lib/forge-std/**"
 ]
 
 # Fuzz settings

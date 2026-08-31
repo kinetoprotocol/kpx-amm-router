@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
-// AXIOLEDGER — KINETOPROTOCOL ($KPX)
-// DeployKPXRouter.s.sol — Chain-Aware Deployment Script
+// AXIOLEDGER  KINETOPROTOCOL ($KPX)
+// DeployKPXRouter.s.sol  Chain-Aware Deployment Script
 //
 // Usage - Anvil:
 //   forge script script/DeployKPXRouter.s.sol:DeployKPXRouter \
@@ -59,7 +59,7 @@ contract DeployKPXRouter is Script {
         bool    isMock   = block.chainid == CHAIN_ANVIL;
 
         console.log("=================================================");
-        console.log("  KINETOPROTOCOL ($KPX) — Router Deployment");
+        console.log("  KINETOPROTOCOL ($KPX)  Router Deployment");
         console.log("=================================================");
         console.log("Chain ID :", block.chainid);
         console.log("Deployer :", deployer);
@@ -67,7 +67,7 @@ contract DeployKPXRouter is Script {
         console.log("Mocks    :", isMock ? "YES (devnet)" : "NO (staging)");
         console.log("");
 
-        // DAO address — deployer on testnet, MUST be replaced with multisig on mainnet
+        // DAO address  deployer on testnet, MUST be replaced with multisig on mainnet
         address daoAddress = vm.envOr("DAO_MULTISIG_ADDRESS", deployer);
         if (block.chainid == CHAIN_MAINNET) {
             require(daoAddress != deployer, "MAINNET: DAO address must be a multisig, not the deployer EOA");

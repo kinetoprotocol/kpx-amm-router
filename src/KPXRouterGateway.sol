@@ -1,15 +1,15 @@
 // SPDX-License-Identifier: BSL-1.1
-// AXIOLEDGER — KINETOPROTOCOL ($KPX)
-// KPXRouterGateway.sol — Cong Dinh tuyen Chinh thuc
+// AXIOLEDGER  KINETOPROTOCOL ($KPX)
+// KPXRouterGateway.sol  Cong Dinh tuyen Chinh thuc
 //
 // +=================================================================+
-// |  STATUS: DRAFT v0.0.1 — SECURITY PATCH APPLIED                 |
+// |  STATUS: DRAFT v0.0.1  SECURITY PATCH APPLIED                 |
 // |  Foundry Tests: core/contracts/kpx/test/KPXRouterGateway.t.sol |
 // |  Security Checklist: core/contracts/KPXRouter-security-review  |
 // |  DO NOT DEPLOY until all 30 security checks PASSED             |
 // +=================================================================+
 //
-// Ref: Whitepaper §11.10 · §11.11
+// Ref: Whitepaper 11.10  11.11
 // Ref: core/contracts/IKPXRouter.sol (interface)
 //
 // PATCH v0.0.1 CHANGES:
@@ -17,7 +17,7 @@
 //  [SEC-2] Reentrancy-Events fixed: emit RoutingExecuted moved before safeTransfer (CEI)
 //  [SEC-3] Modifier logic unwrapped into internal functions (_requireVrqClear,
 //          _requireDao, _requireRelayer) to reduce bytecode size
-//  [SEC-4] Renamed _verifyMPCThreshold → _verifyMpcThreshold (mixedCase standard)
+//  [SEC-4] Renamed _verifyMPCThreshold  _verifyMpcThreshold (mixedCase standard)
 
 pragma solidity ^0.8.24;
 
@@ -32,12 +32,12 @@ import "./interfaces/IKPXDarkPool.sol";
  * @title  KPXRouterGateway
  * @author AXIOLEDGER Core Team
  * @notice Central routing gateway of KINETOPROTOCOL ($KPX).
- *         Handles: Cross-chain Bridge · AMM Swap · RWA Treasury · Dark Pool routing
+ *         Handles: Cross-chain Bridge  AMM Swap  RWA Treasury  Dark Pool routing
  *
  * @dev Architecture notes:
  *  - ReentrancyGuard:  Protects ALL external state-changing functions
- *  - Pausable:         Emergency freeze — only TreasuryDAO 5/7 multisig may call
- *  - SafeERC20:        No raw transfer() — avoids silent failures
+ *  - Pausable:         Emergency freeze  only TreasuryDAO 5/7 multisig may call
+ *  - SafeERC20:        No raw transfer()  avoids silent failures
  *  - No admin key:     owner = TreasuryDAO multisig, not an EOA
  *  - VRQ pre-check:    isFlagged() is the FIRST check in every function
  *  - ZK verification:  After VRQ check, before any state change
@@ -64,7 +64,7 @@ contract KPXRouterGateway is ReentrancyGuard, Pausable {
     // State variables
     // -------------------------------------------------------------------------
 
-    /// @notice TreasuryDAO multisig address — not an EOA
+    /// @notice TreasuryDAO multisig address  not an EOA
     address public treasuryDao;
 
     /// @notice Per-tx bridge limit (anti-drain)
@@ -148,7 +148,7 @@ contract KPXRouterGateway is ReentrancyGuard, Pausable {
     error KPX_ZeroAddress();
 
     // -------------------------------------------------------------------------
-    // Modifiers — [SEC-3] Each modifier delegates to an internal function.
+    // Modifiers  [SEC-3] Each modifier delegates to an internal function.
     // The internal function is compiled once; modifiers only emit a JUMP,
     // reducing contract bytecode size when the check is reused many times.
     // -------------------------------------------------------------------------
@@ -178,7 +178,7 @@ contract KPXRouterGateway is ReentrancyGuard, Pausable {
     /**
      * @param _zkVerifier        VRQ ZK Verifier contract address
      * @param _darkPool          KPX Dark Pool contract address
-     * @param _treasuryDao       TreasuryDAO multisig — will be owner
+     * @param _treasuryDao       TreasuryDAO multisig  will be owner
      * @param _initialRelayers   Initial MPC relayer list
      * @param _supportedChainIds Chain IDs whitelisted at deploy time
      * @param _circuitVersion    Required ZK circuit version
@@ -220,7 +220,7 @@ contract KPXRouterGateway is ReentrancyGuard, Pausable {
      * @param _token         Token to bridge
      * @param _amount        Token quantity
      * @param _destChainId   Destination chain ID (SLIP-44)
-     * @param _recipient     Recipient on destination chain (bytes32 — EVM + non-EVM)
+     * @param _recipient     Recipient on destination chain (bytes32  EVM + non-EVM)
      * @param _deadline      Block-number deadline
      * @param _zkProof       ZK compliance proof from VRQ
      * @param _kycCommitment KYC commitment (raw data never exposed)
@@ -236,7 +236,7 @@ contract KPXRouterGateway is ReentrancyGuard, Pausable {
      *  [7] Amount limit check
      *  [8] Deadline check
      *  [9] Escrow tokens (transfer to this contract)
-     * [10] Emit event — MPC relayers listen to unlock on destination
+     * [10] Emit event  MPC relayers listen to unlock on destination
      */
     function bridgeOut(
         address  _token,
@@ -284,7 +284,7 @@ contract KPXRouterGateway is ReentrancyGuard, Pausable {
         // [9] Escrow tokens
         IERC20(_token).safeTransferFrom(msg.sender, address(this), _amount);
 
-        // [SEC-1] bridgeId uses an internal nonce — not block.number — to prevent
+        // [SEC-1] bridgeId uses an internal nonce  not block.number  to prevent
         //         miner/validator timestamp manipulation (Weak PRNG fix).
         bridgeId = keccak256(abi.encodePacked(
             msg.sender, _token, _amount, _destChainId, _recipient,
@@ -325,7 +325,7 @@ contract KPXRouterGateway is ReentrancyGuard, Pausable {
         // [3] VRQ recipient check
         if (ZK_VERIFIER.isFlagged(_recipient)) revert VRQ_AddressFlagged(_recipient);
 
-        // Verify MPC threshold (simplified — production needs full BLS/ECDSA aggregation)
+        // Verify MPC threshold (simplified  production needs full BLS/ECDSA aggregation)
         _verifyMpcThreshold(_bridgeId, _mpcSignatures);
 
         // [4] Mark FULFILLED before transfer (CEI: Checks-Effects-Interactions)
@@ -342,7 +342,7 @@ contract KPXRouterGateway is ReentrancyGuard, Pausable {
     // =========================================================================
 
     /**
-     * @notice Route a swap — automatically sends to Dark Pool when
+     * @notice Route a swap  automatically sends to Dark Pool when
      *         the amount exceeds the institutional threshold.
      * @param _amountIn      Input token amount
      * @param _amountOutMin  Minimum output (slippage protection)
@@ -394,23 +394,23 @@ contract KPXRouterGateway is ReentrancyGuard, Pausable {
         if (_amountIn == 0) revert KPX_InvalidAmount();
         if (_path.length < 2) revert KPX_InvalidAmount();
 
-        // Transfer token into contract (CEI — state change before external call)
+        // Transfer token into contract (CEI  state change before external call)
         IERC20(_path[0]).safeTransferFrom(msg.sender, address(this), _amountIn);
 
         bool routedDark = false;
 
         // [5] Route decision
         if (_amountIn > DARK_POOL.getInstitutionalThreshold()) {
-            // Dark Pool routing — confidential, no front-running
+            // Dark Pool routing  confidential, no front-running
             IERC20(_path[0]).approve(address(DARK_POOL), _amountIn);
             amountOut = DARK_POOL.executeConfidentialSwap(
                 msg.sender, _amountIn, _path, _zkProof
             );
             routedDark = true;
         } else {
-            // Standard AMM — TODO: integrate actual AMM pool in v0.1.0
+            // Standard AMM  TODO: integrate actual AMM pool in v0.1.0
             // amountOut = standardAMM.swap(_path, _amountIn, address(this));
-            amountOut = _amountIn; // Placeholder — replaced by real AMM call
+            amountOut = _amountIn; // Placeholder  replaced by real AMM call
         }
 
         // [6] Slippage guard
@@ -425,7 +425,7 @@ contract KPXRouterGateway is ReentrancyGuard, Pausable {
             _amountIn, amountOut, routedDark
         );
 
-        // [8] Transfer output to user (external call — comes LAST per CEI)
+        // [8] Transfer output to user (external call  comes LAST per CEI)
         // Note: when routed through Dark Pool, MockDarkPool already sent tokenOut
         // to `msg.sender` directly. For standard AMM path the router holds tokenOut.
         if (!routedDark) {
@@ -437,13 +437,13 @@ contract KPXRouterGateway is ReentrancyGuard, Pausable {
     // SECTION 3: GOVERNANCE & EMERGENCY
     // =========================================================================
 
-    /// @notice Emergency pause — only TreasuryDAO 5/7 multisig
+    /// @notice Emergency pause  only TreasuryDAO 5/7 multisig
     function emergencyPause(string calldata reason) external onlyDao {
         _pause();
         emit EmergencyPaused(msg.sender, reason);
     }
 
-    /// @notice Unpause — only after DAO vote passes
+    /// @notice Unpause  only after DAO vote passes
     function unpause() external onlyDao {
         _unpause();
         emit EmergencyUnpaused(msg.sender);
@@ -483,11 +483,11 @@ contract KPXRouterGateway is ReentrancyGuard, Pausable {
     function getSupportedChains(uint16 id) external view returns (bool) { return supportedChains[id]; }
     function isBridgeFulfilled(bytes32 id) external view returns (bool) { return bridgeFulfilled[id]; }
 
-    /// @notice Backward-compatible accessor — returns ZK_VERIFIER immutable
+    /// @notice Backward-compatible accessor  returns ZK_VERIFIER immutable
     function zkVerifier() external view returns (IVRQVerifier) { return ZK_VERIFIER; }
-    /// @notice Backward-compatible accessor — returns DARK_POOL immutable
+    /// @notice Backward-compatible accessor  returns DARK_POOL immutable
     function darkPool() external view returns (IKPXDarkPool) { return DARK_POOL; }
-    /// @notice Backward-compatible accessor — returns treasuryDao (legacy camelCase)
+    /// @notice Backward-compatible accessor  returns treasuryDao (legacy camelCase)
     function treasuryDAO() external view returns (address) { return treasuryDao; }
 
     // -------------------------------------------------------------------------

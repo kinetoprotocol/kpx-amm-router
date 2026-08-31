@@ -58,14 +58,14 @@ contract DeployKPXRouter is Script {
         address deployer = vm.addr(deployerKey);
         bool    isMock   = block.chainid == CHAIN_ANVIL;
 
-        console.log("=================================================");
-        console.log("  KINETOPROTOCOL ($KPX)  Router Deployment");
-        console.log("=================================================");
-        console.log("Chain ID :", block.chainid);
-        console.log("Deployer :", deployer);
-        console.log("Balance  :", deployer.balance / 1e15, "milliETH");
-        console.log("Mocks    :", isMock ? "YES (devnet)" : "NO (staging)");
-        console.log("");
+        // console.log("=================================================");
+        // console.log("  KINETOPROTOCOL ($KPX)  Router Deployment");
+        // console.log("=================================================");
+        // console.log("Chain ID :", block.chainid);
+        // console.log("Deployer :", deployer);
+        // console.log("Balance  :", deployer.balance / 1e15, "milliETH");
+        // console.log("Mocks    :", isMock ? "YES (devnet)" : "NO (staging)");
+        // console.log("");
 
         // DAO address  deployer on testnet, MUST be replaced with multisig on mainnet
         address daoAddress = vm.envOr("DAO_MULTISIG_ADDRESS", deployer);
@@ -80,10 +80,10 @@ contract DeployKPXRouter is Script {
         if (vrqAddr == address(0)) {
             MockVRQVerifier mockVrq = new MockVRQVerifier();
             vrqAddr = address(mockVrq);
-            console.log("[1] MockVRQVerifier:", vrqAddr);
+            // console.log("[1] MockVRQVerifier:", vrqAddr);
             if (!isMock) console.log("    NOTE: Replace with production IVRQVerifier before mainnet");
         } else {
-            console.log("[1] VRQVerifier (from env):", vrqAddr);
+            // console.log("[1] VRQVerifier (from env):", vrqAddr);
         }
 
         // Step 2: Dark Pool
@@ -91,9 +91,9 @@ contract DeployKPXRouter is Script {
         if (darkPoolAddr == address(0)) {
             MockDarkPool mockDp = new MockDarkPool();
             darkPoolAddr = address(mockDp);
-            console.log("[2] MockDarkPool:", darkPoolAddr);
+            // console.log("[2] MockDarkPool:", darkPoolAddr);
         } else {
-            console.log("[2] DarkPool (from env):", darkPoolAddr);
+            // console.log("[2] DarkPool (from env):", darkPoolAddr);
         }
 
         // Step 3: KPXRouterGateway
@@ -102,25 +102,25 @@ contract DeployKPXRouter is Script {
             darkPoolAddr,
             daoAddress
         );
-        console.log("[3] KPXRouterGateway:", address(router));
+        // console.log("[3] KPXRouterGateway:", address(router));
 
         vm.stopBroadcast();
 
-        console.log("");
-        console.log("=================================================");
-        console.log("  DEPLOYED ADDRESSES");
-        console.log("=================================================");
-        console.log("VRQVerifier      :", vrqAddr);
-        console.log("DarkPool         :", darkPoolAddr);
-        console.log("KPXRouterGateway :", address(router));
-        console.log("TreasuryDAO      :", daoAddress);
-        console.log("=================================================");
+        // console.log("");
+        // console.log("=================================================");
+        // console.log("  DEPLOYED ADDRESSES");
+        // console.log("=================================================");
+        // console.log("VRQVerifier      :", vrqAddr);
+        // console.log("DarkPool         :", darkPoolAddr);
+        // console.log("KPXRouterGateway :", address(router));
+        // console.log("TreasuryDAO      :", daoAddress);
+        // console.log("=================================================");
 
         if (block.chainid == CHAIN_SEPOLIA || block.chainid == CHAIN_MAINNET) {
-            console.log("Etherscan verify:");
-            console.log("  forge verify-contract --chain", block.chainid);
-            console.log("  --constructor-args $(cast abi-encode 'constructor(address,address,address)'", vrqAddr, darkPoolAddr, daoAddress, ")");
-            console.log("  <ROUTER_ADDR> KPXRouterGateway");
+            // console.log("Etherscan verify:");
+            // console.log("  forge verify-contract --chain", block.chainid);
+            // console.log("  --constructor-args $(cast abi-encode 'constructor(address,address,address)'", vrqAddr, darkPoolAddr, daoAddress, ")");
+            // console.log("  <ROUTER_ADDR> KPXRouterGateway");
         }
     }
 }

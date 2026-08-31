@@ -87,7 +87,7 @@ jobs:
 
       - name: "📦 Install dependencies"
         run: |
-          forge install OpenZeppelin/openzeppelin-contracts@v4.9.6 --no-commit
+          forge install OpenZeppelin/openzeppelin-contracts@v4.8.3 --no-commit
           forge install foundry-rs/forge-std --no-commit
 
       - name: "🔨 Build & check sizes"
@@ -153,7 +153,7 @@ jobs:
 
       - name: "📦 Install dependencies"
         run: |
-          forge install OpenZeppelin/openzeppelin-contracts@v4.9.6 --no-commit
+          forge install OpenZeppelin/openzeppelin-contracts@v4.8.3 --no-commit
           forge install foundry-rs/forge-std --no-commit
 
       - name: "🚀 Deploy KPXRouterGateway"

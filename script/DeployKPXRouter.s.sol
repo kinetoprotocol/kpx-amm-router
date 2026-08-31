@@ -14,7 +14,7 @@
 //     --private-key $DEPLOYER_PRIVATE_KEY \
 //     --broadcast --verify --etherscan-api-key $ETHERSCAN_API_KEY -vvvv
 
-pragma solidity ^0.8.24;
+pragma solidity ^0.8.28;
 
 import "forge-std/Script.sol";
 import "forge-std/console.sol";

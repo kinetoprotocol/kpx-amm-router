@@ -19,7 +19,7 @@
 //          _requireDao, _requireRelayer) to reduce bytecode size
 //  [SEC-4] Renamed _verifyMPCThreshold → _verifyMpcThreshold (mixedCase standard)
 
-pragma solidity ^0.8.24;
+pragma solidity ^0.8.28;
 
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";

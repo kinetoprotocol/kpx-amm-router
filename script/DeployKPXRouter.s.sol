@@ -97,10 +97,26 @@ contract DeployKPXRouter is Script {
         }
 
         // Step 3: KPXRouterGateway
+        // Initial relayers — deployer is the only relayer on devnet/testnet.
+        // On mainnet, pass the real MPC relayer set via INITIAL_RELAYER env var.
+        address initialRelayer = vm.envOr("INITIAL_RELAYER", deployer);
+        address[] memory initialRelayers = new address[](1);
+        initialRelayers[0] = initialRelayer;
+
+        // Supported chain IDs — Sepolia (11155111) for testnet, Ethereum mainnet (1) for prod.
+        uint16[] memory supportedChainIds = new uint16[](1);
+        supportedChainIds[0] = uint16(block.chainid);
+
+        // Circuit version — must match the deployed VRQ circuit.
+        uint256 circuitVersion = vm.envOr("CIRCUIT_VERSION", uint256(1));
+
         KPXRouterGateway router = new KPXRouterGateway(
             vrqAddr,
             darkPoolAddr,
-            daoAddress
+            daoAddress,
+            initialRelayers,
+            supportedChainIds,
+            circuitVersion
         );
         // console.log("[3] KPXRouterGateway:", address(router));
 
